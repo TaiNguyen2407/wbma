@@ -1,16 +1,6 @@
-/* eslint-disable react/jsx-no-undef */
-import {
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Image,
-  Text,
-  SafeAreaView,
-} from 'react-native';
-import {StatusBar} from 'expo-status-bar';
+import {FlatList} from 'react-native';
+import ListItem from './ListItem';
 
-// eslint-disable-next-line no-unused-vars
 const mediaArray = [
   {
     key: '0',
@@ -44,42 +34,13 @@ const mediaArray = [
   },
 ];
 
-const App = () => {
+const List = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        style={styles.flatList}
-        data={mediaArray}
-        renderItem={({item}) => {
-          return (
-            <TouchableOpacity>
-              <Image
-                style={{width: 100, height: 100}}
-                source={{uri: item.thumbnails.w160}}
-              />
-              <View>
-                <Text>{item.title}</Text>
-                <Text>{item.description}</Text>
-              </View>
-            </TouchableOpacity>
-          );
-        }}
-      />
-      <StatusBar style="auto" />
-    </SafeAreaView>
-  );
+    <FlatList
+      data={mediaArray}
+      renderItem={({item}) => <ListItem />}
+    />
+  )
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'lightblue',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  flatList: {
-    // flexDirection: 'row',
-  },
-});
-
-export default App;
+export default List;
