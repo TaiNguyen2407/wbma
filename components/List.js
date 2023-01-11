@@ -1,15 +1,22 @@
+import { useEffect, useState } from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import ListItem from './ListItem';
 
 const url = 'https://raw.githubusercontent.com/mattpe/wbma/master/docs/assets/test.json';
-let mediaArray = [];
-const loadMedia = async() => {
-  const response = await fetch(url);
-  const json = await response.json();
-}
 
-loadMedia();
 const List = () => {
+  const [mediaArray, setMediaArray] = useState([]);
+
+  const loadMedia = async() => {
+    const response = await fetch(url);
+    const json = await response.json();
+    setMediaArray(json);
+  }
+
+  useEffect(() => {
+    loadMedia();
+  }, []);
+
   return (
     <FlatList style={styles.flatList}
       data={mediaArray}
