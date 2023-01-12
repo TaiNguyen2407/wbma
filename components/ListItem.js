@@ -6,14 +6,15 @@ import { uploadsUrl } from '../utils/variables';
 const ListItem = ({singleMedia}) => {
   const item = singleMedia;
   return (
-    <TouchableOpacity style={styles.container} onPress= {() => {
-    }}>
-      <Image
-        style={styles.image}
-        source={{uri: uploadsUrl + item.thumbnails?.w160}}
-      />
-      <View style={styles.ListItemView}>
-        <Text style={styles.title}>{item.title}</Text>
+    <TouchableOpacity style={styles.row}>
+      <View style={styles.box}>
+        <Image
+          style={styles.image}
+          source={{uri: uploadsUrl + item.thumbnails?.w160}}
+        />
+      </View>
+      <View style={styles.box}>
+        <Text style={styles.listTitle}>{item.title}</Text>
         <Text>{item.description}</Text>
       </View>
     </TouchableOpacity>
@@ -21,24 +22,24 @@ const ListItem = ({singleMedia}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection:'row',
-    backgroundColor:'#c6c6c6',
+  row: {
+    flexDirection: 'row',
+    backgroundColor: '#ccc',
     marginBottom: 10,
-    height: 200
+  },
+  box: {
+    flex: 1,
+    padding: 10,
   },
   image: {
-    width:'30%',
-    margin:5,
+    flex: 1,
+    minHeight: 100,
   },
-  title: {
-    fontSize:25,
-    fontWeight: '600',
+  listTitle: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    paddingBottom: 15,
   },
-  ListItemView: {
-    width: '60%',
-    paddingVertical: 10,
-  }
 
 })
 

@@ -14,7 +14,6 @@ const List = () => {
   )
 };
 
-
 const styles = StyleSheet.create({
   flatList: {
   }
