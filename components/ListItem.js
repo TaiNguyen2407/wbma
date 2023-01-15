@@ -9,7 +9,7 @@ const ListItem = ({singleMedia}) => {
   const item = singleMedia;
   const navigation = useNavigation();
   return (
-    <TouchableOpacity style={styles.row} onPress={() => {
+    <TouchableOpacity style={styles.container} onPress={() => {
       navigation.navigate('Single', item);
     }}  >
       <View style={styles.box}>
@@ -27,23 +27,24 @@ const ListItem = ({singleMedia}) => {
 };
 
 const styles = StyleSheet.create({
-  row: {
+  container: {
     flexDirection: 'row',
-    backgroundColor: '#ccc',
+    backgroundColor: 'lightgray',
     marginBottom: 10,
   },
   box: {
     flex: 1,
-    padding: 10,
+    padding: 5,
+    alignSelf:'center'
   },
   image: {
     flex: 1,
     minHeight: 100,
+    borderBottomLeftRadius: 50
   },
   listTitle: {
     fontWeight: 'bold',
     fontSize: 20,
-    paddingBottom: 15,
   },
 
 })
