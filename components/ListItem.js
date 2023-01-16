@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
-import {TouchableOpacity, View, Text, Image, StyleSheet, Modal} from 'react-native';
+import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
 import { uploadsUrl } from '../utils/variables';
 import { useNavigation } from '@react-navigation/native';
 import PropTypes from 'prop-types';
-
 
 const ListItem = ({singleMedia}) => {
   const item = singleMedia;
@@ -24,7 +23,10 @@ const ListItem = ({singleMedia}) => {
       </View>
     </TouchableOpacity>
   );
+
+
 };
+
 
 const styles = StyleSheet.create({
   container: {
