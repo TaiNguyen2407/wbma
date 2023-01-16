@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-const Login = ({navigation}) => { // props is needed for navigation
+const Login = () => { // props is needed for navigation
   const {setIsLoggedIn} = useContext(MainContext);
   const logIn = async() => {
       setIsLoggedIn(true);

@@ -1,4 +1,3 @@
-// import { StatusBar } from 'react-native';
 import BackgroundImage from './components/BackgroundImage';
 import {StatusBar} from 'expo-status-bar';
 import { MainProvider } from './contexts/MainContext';
