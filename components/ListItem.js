@@ -4,16 +4,14 @@ import { uploadsUrl } from '../utils/variables';
 import { useNavigation } from '@react-navigation/native';
 import PropTypes from 'prop-types';
 
-
 const ListItem = ({singleMedia}) => {
   const item = singleMedia;
   const navigation = useNavigation();
   return (
-    <TouchableOpacity style={styles.row} onPress={() => {
+    <TouchableOpacity style={styles.container} onPress={() => {
       navigation.navigate('Single', item);
     }}  >
       <View style={styles.box}>
-
         <Image
           style={styles.image}
           source={{uri: uploadsUrl + item.thumbnails?.w160}}
@@ -25,10 +23,13 @@ const ListItem = ({singleMedia}) => {
       </View>
     </TouchableOpacity>
   );
+
+
 };
 
+
 const styles = StyleSheet.create({
-  row: {
+  container: {
     flexDirection: 'row',
     backgroundColor: '#ccc',
     marginBottom: 10,
