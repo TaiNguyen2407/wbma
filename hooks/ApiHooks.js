@@ -41,26 +41,30 @@ const useMedia = () => {
 
 const useAuthentication = () => {
   const postLogin = async (userCredentials) => { // user credentials format: {username: 'someUsername', password: 'somePassword'}
-    const {username, password} = userCredentials;
     const options = {
        // TODO: add method, headers and body for sending json data with POST
         method:'POST',
         headers:{
-          'Content-Type': 'Application/json'
-        }
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userCredentials),
     };
-    try {
-       // TODO: use fetch to send request to login endpoint and return the result as json, handle errors with try/catch and response.ok
-    } catch (error) {
-       throw new Error(error.message);
-    }
+    const loginResult = await doFetch(baseUrl + 'login', options);
+    return loginResult;
  };
+  return {postLogin};
 };
 
 // https://media.mw.metropolia.fi/wbma/docs/#api-User
 const useUser = () => {
-  const checkUser = async() => {
-    // Call
-  }
-}
-export {useMedia};
+
+  const getUserByToken = async (token) => {
+    const options = {
+      method: 'GET',
+      headers: {'x-access-token': token},
+    };
+    return await doFetch(baseUrl + 'users/user', options)
+  };
+  return {getUserByToken};
+ };
+export {useMedia, useAuthentication, useUser};
