@@ -65,6 +65,20 @@ const useUser = () => {
     };
     return await doFetch(baseUrl + 'users/user', options)
   };
-  return {getUserByToken};
+
+  const postUser = async (userData) => { // user credentials format: {username: 'someUsername', password: 'somePassword'}
+    const options = {
+       // TODO: add method, headers and body for sending json data with POST
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData),
+    };
+    const registerResult = await doFetch(baseUrl + 'users', options);
+    return registerResult;
+ };
+
+  return {getUserByToken, postUser};
  };
 export {useMedia, useAuthentication, useUser};

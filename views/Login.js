@@ -4,34 +4,32 @@ import {
   View,
   Text,
   Button,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+  Keyboard,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { MainContext } from '../contexts/MainContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAuthentication, useUser } from '../hooks/ApiHooks';
+import { useUser } from '../hooks/ApiHooks';
+import LoginForm from '../components/LoginForm';
+import RegisterForm from '../components/RegisterForm';
 
 
 
 const Login = () => {
-  const {setIsLoggedIn} = useContext(MainContext);
-  const {postLogin} = useAuthentication();
+  const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {getUserByToken} = useUser();
-
-  const logIn = async() => {
-    const data = {username: 'Tai Nguyen', password:'password1'};
-      try {
-        const loginResult = await postLogin(data);
-        await AsyncStorage.setItem('userToken', loginResult.token);
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.warn('error in storing token', error);
-      }
-  };
 
   const checkToken = async() => {
     try {
       const userToken = await AsyncStorage.getItem('userToken');
+      // If no token available, do thing / return nothing.
+      if (userToken === null){
+        return ;
+      }
       const userData = await getUserByToken(userToken);
+      setUser(userData);
       setIsLoggedIn(true);
     } catch (error) {
       console.warn('No valid token available', error);
@@ -43,10 +41,18 @@ const Login = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text>Login</Text>
-      <Button title="Sign in!" onPress={logIn} />
-    </View>
+    <TouchableOpacity
+      onPress={() => Keyboard.dismiss()}
+      style={{flex:1}}
+      activeOpacity={1} >
+      <KeyboardAvoidingView style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <LoginForm/>
+        <RegisterForm/>
+
+      </KeyboardAvoidingView>
+    </TouchableOpacity>
+
   );
 };
 
