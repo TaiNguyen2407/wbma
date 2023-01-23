@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Alert, Button, Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import { useAuthentication } from '../hooks/ApiHooks';
 import { MainContext } from '../contexts/MainContext';
 import { Controller, useForm } from 'react-hook-form';
+import { ButtonGroup, Card, Dialog, Divider, Header, Input, Button } from '@rneui/themed';
 
 const LoginForm = () => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
@@ -28,8 +29,8 @@ const LoginForm = () => {
 
 
   return (
-    <View>
-      <Text>Login Form</Text>
+    <>
+      <Card.Title>Login Form</Card.Title>
       <Controller
         control={control}
         rules={{
@@ -37,7 +38,7 @@ const LoginForm = () => {
           minLength: 3
         }}
         render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
+          <Input
             placeholder='Username'
             onBlur={onBlur}
             onChangeText={onChange}
@@ -56,7 +57,7 @@ const LoginForm = () => {
           minLength: 5
         }}
         render={({field: {onChange, onBlur, value}}) => (
-          <TextInput
+          <Input
             placeholder='Password'
             onBlur={onBlur}
             onChangeText={onChange}
@@ -68,8 +69,11 @@ const LoginForm = () => {
         name='password'
         />
         {errors.password && <Text>Password (min. 5 chars) is required.</Text>}
-        <Button title='Sign in!' onPress={handleSubmit(logIn)} />
-    </View>
+        <Button
+          title='Sign in!'
+          onPress={handleSubmit(logIn)}
+        />
+    </>
   )
 };
 

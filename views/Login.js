@@ -45,7 +45,7 @@ const Login = () => {
       onPress={() => Keyboard.dismiss()}
       style={{flex:1}}
       activeOpacity={1} >
-      <KeyboardAvoidingView style={styles.container}
+      <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <LoginForm/>
         <RegisterForm/>
@@ -56,14 +56,7 @@ const Login = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
-});
+
 
 Login.propTypes = {
   navigation: PropTypes.object,

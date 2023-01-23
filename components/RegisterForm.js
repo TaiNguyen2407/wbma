@@ -1,6 +1,7 @@
+import { Card, Input, Button } from '@rneui/themed';
 import React, { useContext } from 'react'
 import { Controller, useForm } from 'react-hook-form';
-import { Button, Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import { MainContext } from '../contexts/MainContext';
 import { useAuthentication, useUser } from '../hooks/ApiHooks';
 
@@ -24,13 +25,13 @@ const RegisterForm = () => {
   };
 
   return (
-    <View>
-      <Text>Register Form</Text>
+    <>
+      <Card.Title>Register Form</Card.Title>
       <Controller
         control={control}
         rules={{required:true, minLength: 3}}
         render={({field: {onBlur, onChange, value}}) => (
-          <TextInput
+          <Input
             placeholder='Username'
             onBlur={onBlur}
             onChangeText={onChange}
@@ -47,7 +48,7 @@ const RegisterForm = () => {
         control={control}
         rules={{required:true, minLength: 5}}
         render={({field: {onBlur, onChange, value}}) => (
-          <TextInput
+          <Input
             placeholder='Password'
             onBlur={onBlur}
             onChangeText={onChange}
@@ -69,7 +70,7 @@ const RegisterForm = () => {
           }
         }}
         render={({field: {onBlur, onChange, value}}) => (
-          <TextInput
+          <Input
             placeholder='Email'
             onBlur={onBlur}
             onChangeText={onChange}
@@ -86,7 +87,7 @@ const RegisterForm = () => {
         control={control}
         rules={{required:false, minLength:3}}
         render={({field: {onBlur, onChange, value}}) => (
-          <TextInput
+          <Input
             placeholder='Full Name'
             onBlur={onBlur}
             onChangeText={onChange}
@@ -97,7 +98,7 @@ const RegisterForm = () => {
       />
       {errors.full_name?.type === 'minLength' && <Text>min length is 3 characters</Text>}
       <Button title='Register' onPress={handleSubmit(register)} />
-    </View>
+    </>
   )
 };
 

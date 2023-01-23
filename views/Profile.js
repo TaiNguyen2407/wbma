@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Card, Icon, ListItem, Button } from "@rneui/themed";
 import {React, useContext, useEffect, useState} from "react";
-import { StyleSheet, SafeAreaView, Text, Button, Image } from "react-native";
+// import { StyleSheet, SafeAreaView, Text, Image } from "react-native";
 import { MainContext } from '../contexts/MainContext';
 import {useTag} from '../hooks/ApiHooks';
 import { uploadsUrl } from "../utils/variables";
@@ -25,12 +26,18 @@ const Profile = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>Profile</Text>
-      <Image source={{uri: uploadsUrl + avatar}} style={{width:200, height:200}}/>
-      <Text>Username: {user.username}</Text>
-      <Text>Email: {user.email}</Text>
-      <Text>Full Name: {user.full_name}</Text>
+
+    <Card>
+      <Card.Title>{user.username}</Card.Title>
+      <Card.Image source={{uri: uploadsUrl + avatar}}/>
+      <ListItem>
+        <Icon name="email"/>
+        <ListItem.Title>{user.email}</ListItem.Title>
+      </ListItem>
+      <ListItem>
+        <Icon name="badge"/>
+        <ListItem.Title>{user.full_name} Tai Nguyen</ListItem.Title>
+      </ListItem>
       <Button
         title="Logout!"
         onPress={async() => {
@@ -42,18 +49,10 @@ const Profile = () => {
             console.warn('Clearing asyncStorage failed', error);
           }
       }} />
-    </SafeAreaView>
+    </Card>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex:1,
-    backgroundColor:'#fff',
-    alignItems:'center',
-    justifyContent:'center',
-    paddingTop: 40,
-  },
-});
+
 
 export default Profile;
