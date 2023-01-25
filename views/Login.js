@@ -1,9 +1,5 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  Button,
   KeyboardAvoidingView,
   TouchableOpacity,
   Keyboard,
@@ -14,12 +10,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useUser } from '../hooks/ApiHooks';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
+import { Button, Text } from '@rneui/themed';
 
 
 
 const Login = () => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
-  const {getUserByToken} = useUser();
+  const {getUserByToken, checkUsername} = useUser();
+
+  const [toggleForm, setToggleForm] = useState(true);
 
   const checkToken = async() => {
     try {
@@ -36,6 +35,7 @@ const Login = () => {
     }
   };
 
+
   useEffect(() => {
     checkToken();
   }, []);
@@ -43,13 +43,13 @@ const Login = () => {
   return (
     <TouchableOpacity
       onPress={() => Keyboard.dismiss()}
-      style={{flex:1}}
+      style={{flex:1, padding: 16}}
       activeOpacity={1} >
       <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <LoginForm/>
-        <RegisterForm/>
-
+      {toggleForm ? <LoginForm/> : <RegisterForm/>}
+      {/* <Text>{toggleForm ? 'Register' : 'Log in'}</Text> */}
+      <Button title={toggleForm ? 'Register' : 'Log in'} style={{marginTop: 10}} onPress={() => setToggleForm(!toggleForm)} />
       </KeyboardAvoidingView>
     </TouchableOpacity>
 

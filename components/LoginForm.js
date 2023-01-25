@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Text, TextInput, View } from 'react-native';
-import { useAuthentication } from '../hooks/ApiHooks';
+import { useAuthentication, useUser } from '../hooks/ApiHooks';
 import { MainContext } from '../contexts/MainContext';
 import { Controller, useForm } from 'react-hook-form';
 import { ButtonGroup, Card, Dialog, Divider, Header, Input, Button } from '@rneui/themed';
@@ -10,6 +10,7 @@ import { ButtonGroup, Card, Dialog, Divider, Header, Input, Button } from '@rneu
 const LoginForm = () => {
   const {setIsLoggedIn, setUser} = useContext(MainContext);
   const {postLogin} = useAuthentication();
+  const {checkUsername} = useUser();
   const {control, handleSubmit, formState: { errors }} = useForm({
     defaultValues: {username: '', password: ''}
   });
@@ -35,7 +36,7 @@ const LoginForm = () => {
         control={control}
         rules={{
           required:true,
-          minLength: 3
+          minLength: 3,
         }}
         render={({field: {onChange, onBlur, value}}) => (
           <Input
