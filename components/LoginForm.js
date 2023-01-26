@@ -24,7 +24,6 @@ const LoginForm = () => {
       } catch (error) {
         console.warn('authentication failed', error);
         //TODO: notify user failed login attempt
-        Alert.alert('Incorrect username or password');
       }
   };
 
@@ -35,8 +34,7 @@ const LoginForm = () => {
       <Controller
         control={control}
         rules={{
-          required:true,
-          minLength: 3,
+          required: {value:true, message: 'is required'}
         }}
         render={({field: {onChange, onBlur, value}}) => (
           <Input
@@ -44,18 +42,16 @@ const LoginForm = () => {
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            errorMessage= {errors.username && errors.username.message}
           />
         )}
         name='username'
       />
-      {errors.username?.type === 'required' && <Text>is required</Text>}
-      {errors.username?.type === 'minLength' && <Text>min length is 3 characters</Text>}
 
       <Controller
         control={control}
         rules={{
-          required:true,
-          minLength: 5
+          required: {value: true, message: 'is required'}
         }}
         render={({field: {onChange, onBlur, value}}) => (
           <Input
@@ -64,12 +60,12 @@ const LoginForm = () => {
             onChangeText={onChange}
             value={value}
             secureTextEntry={true}
+            errorMessage= {errors.password && errors.password.message}
             //TODO: create a useState for displaying password option
           />
         )}
         name='password'
         />
-        {errors.password && <Text>Password (min. 5 chars) is required.</Text>}
         <Button
           title='Sign in!'
           onPress={handleSubmit(logIn)}

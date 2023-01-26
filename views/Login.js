@@ -3,6 +3,7 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { MainContext } from '../contexts/MainContext';
@@ -41,6 +42,7 @@ const Login = () => {
   }, []);
 
   return (
+    <ScrollView>
     <TouchableOpacity
       onPress={() => Keyboard.dismiss()}
       style={{flex:1, padding: 16}}
@@ -48,11 +50,10 @@ const Login = () => {
       <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       {toggleForm ? <LoginForm/> : <RegisterForm/>}
-      {/* <Text>{toggleForm ? 'Register' : 'Log in'}</Text> */}
       <Button title={toggleForm ? 'Register' : 'Log in'} style={{marginTop: 10}} onPress={() => setToggleForm(!toggleForm)} />
       </KeyboardAvoidingView>
     </TouchableOpacity>
-
+    </ScrollView>
   );
 };
 
