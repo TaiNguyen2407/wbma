@@ -17,6 +17,7 @@ const Single = ({route}) => {
       <ListItem>
         <Icon name="image" />
         <ListItem.Subtitle>{description}</ListItem.Subtitle>
+        <ListItem.Subtitle><Text>uploaded at : {new Date(timeAdded).toLocaleString('fi-FI')}</Text></ListItem.Subtitle>
       </ListItem>
     </Card>
   );

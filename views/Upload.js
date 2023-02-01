@@ -178,12 +178,14 @@ const Upload = ({navigation}) => {
           />
 
           <Button
+          loading = {loading}
             disabled={!mediaFile.uri || errors.title || errors.description}
             title='Upload'
             onPress={handleSubmit(upload)}
           />
           <Button title={'Reset'} onPress={reset} type='outline' />
-          {loading && <ActivityIndicator size={'large'} />}
+          {/* {loading && <ActivityIndicator size={'large'} />} */}
+
 
         </Card>
 
