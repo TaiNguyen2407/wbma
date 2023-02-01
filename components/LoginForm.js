@@ -17,12 +17,14 @@ const LoginForm = () => {
 
   const logIn = async(loginData) => {
       try {
+        // const userToken = await AsyncStorage.getItem('userToken');
         const loginResult = await postLogin(loginData);
+        // console.log(await AsyncStorage.getItem('userToken'));
         await AsyncStorage.setItem('userToken', loginResult.token);
         setIsLoggedIn(true);
         setUser(loginResult.user);
       } catch (error) {
-        console.warn('authentication failed', error);
+        console.warn('authentication failed', error.message);
         //TODO: notify user failed login attempt
       }
   };

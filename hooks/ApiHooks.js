@@ -17,7 +17,7 @@ const doFetch = async(url, options) => {
 
 
 const useMedia = () => {
-  const {update} = useContext(MainContext)
+  const {update} = useContext(MainContext);
 
   const [mediaArray, setMediaArray] = useState([]);
 
@@ -39,7 +39,7 @@ const useMedia = () => {
     loadMedia();
     //TODO: load media when update state changes in main context
     //add update state to the array below
-  }, []);
+  }, [update]);
 
 
   const postMedia = async(fileData, token) => {
@@ -68,7 +68,7 @@ const useAuthentication = () => {
        // TODO: add method, headers and body for sending json data with POST
         method:'POST',
         headers:{
-          'x-access-token': token
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(userCredentials),
     };
@@ -119,7 +119,23 @@ const useTag = () => {
     return await doFetch(baseUrl + 'tags/' + tag);
   }
 
-  return {getFilesByTag};
+  const postTag = async(tagData, token) => {
+    const options = {
+      method: 'POST',
+      headers: {
+        'x-access-token': token,
+        'Content-Type' : 'application/json',
+      },
+      body: JSON.stringify(tagData),
+    }
+    try {
+      return await doFetch(baseUrl + 'tags', options);
+    } catch (error) {
+      throw new Error('PostTag: ', error);
+    }
+  }
+
+  return {getFilesByTag, postTag};
 }
 
 

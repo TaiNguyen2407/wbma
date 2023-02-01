@@ -29,6 +29,7 @@ const Login = () => {
         return ;
       }
       const userData = await getUserByToken(userToken);
+      console.log(userData);
       setUser(userData);
       setIsLoggedIn(true);
     } catch (error) {

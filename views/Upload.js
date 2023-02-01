@@ -3,20 +3,25 @@ import { Card, Input, Button } from '@rneui/themed';
 import { Controller, useForm } from 'react-hook-form';
 import { ActivityIndicator, Keyboard, ScrollView, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Alert } from 'react-native';
-import { useMedia } from '../hooks/ApiHooks';
+import { useMedia, useTag } from '../hooks/ApiHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MainContext } from '../contexts/MainContext';
+import { useFocusEffect } from '@react-navigation/native';
+import { appId } from '../utils/variables';
 
 const Upload = ({navigation}) => {
-  const {control, handleSubmit, formState: { errors }} = useForm({
-    defaultValues: {title: '', description: ''}
+  const {control, handleSubmit, formState: { errors }, trigger, setValue} = useForm({
+    defaultValues: {title: '', description: ''},
+    mode:'onBlur'
   });
   const [mediaFile, setMediaFile] = useState({});
   const [loading, setLoading] = useState(false);
   const { postMedia } = useMedia();
+  const { postTag } = useTag();
   const { update, setUpdate } = useContext(MainContext);
+  // const navigation = useNavigation()
 
   const upload = async(data) => {
 
@@ -28,7 +33,7 @@ const Upload = ({navigation}) => {
     formData.append('title', data.title);
     formData.append('description', data.description);
     const fileName = mediaFile.uri.split('/').pop();
-    const fileExt = fileName.split('.').pop();
+    let fileExt = fileName.split('.').pop();
     if (fileExt === 'jpg') {
         fileExt = 'jpeg';
     }
@@ -44,14 +49,24 @@ const Upload = ({navigation}) => {
     console.log('upload:', formData);
 
     try {
-      const result = await postMedia(formData, await AsyncStorage.getItem('userToken'));
-      console.log(result);
+      const token = await AsyncStorage.getItem('userToken');
+      const result = await postMedia(formData, token);
+      const appTag = {
+        file_id: result.file_id,
+        tag: appId
+      };
+      const tagResult = await postTag(appTag, token);
+      console.log(tagResult);
       Alert.alert('Uploaded successfully', 'File id: ' + result.file_id, [
         {text: 'OK', onPress: () => {
           console.log('OK Pressed');
           //update 'update' state in main context
           setUpdate(!update);
+          //Reset Form
+          reset();
           //TODO: navigate to Home page
+          navigation.navigate('Home');
+
         }}
       ])
     } catch (error) {
@@ -59,27 +74,48 @@ const Upload = ({navigation}) => {
     } finally {
       setLoading(false);
     }
-
   };
 
 
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.5,
-    });
+    try {
+	const result = await ImagePicker.launchImageLibraryAsync({
+	      mediaTypes: ImagePicker.MediaTypeOptions.All,
+	      allowsEditing: true,
+	      aspect: [4, 3],
+	      quality: 0.5,
+	    });
 
-    console.log(result);
+	    console.log(result);
 
-    if (!result.canceled) {
-      setMediaFile(result.assets[0]);
+	    if (!result.canceled) {
+	      setMediaFile(result.assets[0]);
+        //Validate form
+        trigger();
+	    }
+    } catch (error) {
+      console.log(error);
     }
   };
 
+
+
+  // console.log('validation errors: ', errors);
+  const reset = () => {
+    setMediaFile({});
+    setValue('title', '');
+    setValue('description', '');
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        reset();
+      };
+    }, []),
+  );
 
   return (
     <ScrollView>
@@ -92,7 +128,12 @@ const Upload = ({navigation}) => {
           <Controller
             control={control}
             rules={{
-              required: {value:true, message: 'is required'}
+              required: {
+                value:true, message: 'is required',
+              },
+              minLength: {
+                value: 3, message: 'Title min length 3 is required'
+              }
             }}
             render={({field: {onChange, onBlur, value}}) => (
               <Input
@@ -108,6 +149,12 @@ const Upload = ({navigation}) => {
 
           <Controller
             control={control}
+            rules={{
+              minLength: {
+                value: 3,
+                message:'Description min length 3 is required'
+              }
+            }}
             render={({field: {onChange, onBlur, value}}) => (
               <Input
                 placeholder='Description'
@@ -126,10 +173,11 @@ const Upload = ({navigation}) => {
           />
 
           <Button
-            disabled={!mediaFile.uri}
+            disabled={!mediaFile.uri || errors.title || errors.description}
             title='Upload'
             onPress={handleSubmit(upload)}
           />
+          <Button title={'Reset'} onPress={reset} type='outline' />
           {loading && <ActivityIndicator size={'large'} />}
 
         </Card>
