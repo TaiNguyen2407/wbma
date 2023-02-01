@@ -24,11 +24,6 @@ const Upload = ({navigation}) => {
   // const navigation = useNavigation()
 
   const upload = async(data) => {
-
-    // if (!data) {
-    //   Alert.alert('Please select a picture');
-    //   return;
-    // }
     const formData = new FormData();
     formData.append('title', data.title);
     formData.append('description', data.description);
@@ -124,7 +119,17 @@ const Upload = ({navigation}) => {
         style={{flex:1, padding: 16}}
         activeOpacity={1}>
         <Card>
-          <Card.Image source={{uri: mediaFile.uri || 'http://placekitten.com/200/300'}} />
+          { mediaFile.type === 'video' ?
+          (
+            <Card.Title>Video</Card.Title>
+          ) :
+          (
+            <Card.Image
+              source={{uri: mediaFile.uri || 'http://placekitten.com/200/300'}}
+              onPress={pickImage}
+            />
+          )
+          }
           <Controller
             control={control}
             rules={{

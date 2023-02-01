@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { MainContext } from "../contexts/MainContext";
-import { baseUrl } from "../utils/variables";
+import { appId, baseUrl } from "../utils/variables";
 
 
 const doFetch = async(url, options) => {
@@ -23,8 +23,10 @@ const useMedia = () => {
 
   const loadMedia = async() => {
     try {
-      const response = await fetch(baseUrl + 'media');
-      const json = await response.json();
+      // const response = await fetch(baseUrl + 'media');
+      // const json = await response.json();
+      const json = await useTag().getFilesByTag(appId);
+
       const media = await Promise.all(json.map(async(item) => {
         const fileResponse = await fetch(baseUrl + 'media/' + item.file_id);
         return await fileResponse.json();
