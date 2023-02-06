@@ -11,7 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Single = ({route}) => {
   const {getUserById} = useUser();
-  const { getFavouritesByFileId, postFavourite } = useFavourite();
+  const { getFavouritesByFileId, postFavourite, deleteFavourite } = useFavourite();
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [owner, setOwner] = useState({});
@@ -33,8 +33,22 @@ const Single = ({route}) => {
       // note: cannot like same file multiple times
 
     }
-
   }
+
+  const minusFavourites = async() => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      await deleteFavourite(fileId, token);
+      getFavourites();
+    } catch (error) {
+      // note: you cannot like same file multiple times
+      console.log(error);
+    }
+  };
+
+
+  //Check if user has liked a file already by => check if her/his userId is in the likes array => If yes, display possibility to dislike => if no, display possibility to lilke
+
 
   const getOwnerInfo = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
@@ -44,7 +58,6 @@ const Single = ({route}) => {
   useEffect(() => {
     getOwnerInfo();
     getFavourites();
-    addFavourites();
   }, []);
 
   return (
@@ -82,6 +95,14 @@ const Single = ({route}) => {
         <Icon name="favorite" onPress={addFavourites} />
         <Text>favourite: {likes.length.toString()}</Text>
       </ListItem>
+      <ListItem>
+          {userLikesIt ? (
+            <Icon name="favorite" color="red" onPress={dislikeFile} />
+          ) : (
+            <Icon name="favorite-border" onPress={likeFile} />
+          )}
+          <Text>Total likes: {likes.length}</Text>
+        </ListItem>
       </Card>
     </ScrollView>
 

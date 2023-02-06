@@ -194,8 +194,18 @@ const useFavourite = () => {
     }
   }
 
-  const deleteFavourtie = async (fildId, token) =>{
-
+  const deleteFavourite = async (fileId, token) =>{
+    const options = {
+      method: 'delete',
+      headers: {
+        'x-access-token': token,
+      },
+    };
+    try {
+      return await doFetch(baseUrl + 'favourites/file/' + fileId, options);
+    } catch (error) {
+      throw new Error('deleteFavourite error, ' + error.message);
+    }
   }
 
   return {postFavourite, getFavouritesByFileId, getFavouritesByUser, deleteFavourtie};
