@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MainContext } from '../contexts/MainContext';
 import { useFocusEffect } from '@react-navigation/native';
 import { appId } from '../utils/variables';
+import { Video } from "expo-av";
 
 const Upload = ({navigation}) => {
   const {control, handleSubmit, formState: { errors }, trigger, setValue} = useForm({
@@ -17,6 +18,8 @@ const Upload = ({navigation}) => {
     mode:'onBlur'
   });
   const [mediaFile, setMediaFile] = useState({});
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
   const [loading, setLoading] = useState(false);
   const { postMedia } = useMedia();
   const { postTag } = useTag();
@@ -121,7 +124,18 @@ const Upload = ({navigation}) => {
         <Card>
           { mediaFile.type === 'video' ?
           (
-            <Card.Title>Video</Card.Title>
+            <Video
+              ref={video}
+              source={{
+                uri: mediaFile.uri
+              }}
+              useNativeControls
+              isLooping
+              resizeMode="contain"
+              onPlaybackStatusUpdate={status => setStatus(() => status)}
+              style={{height:500, width:'100%'}}
+              usePoster
+            />
           ) :
           (
             <Card.Image
@@ -178,7 +192,7 @@ const Upload = ({navigation}) => {
           />
 
           <Button
-          loading = {loading}
+            loading = {loading}
             disabled={!mediaFile.uri || errors.title || errors.description}
             title='Upload'
             onPress={handleSubmit(upload)}
