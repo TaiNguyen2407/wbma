@@ -4,25 +4,47 @@ import PropTypes from 'prop-types';
 import { uploadsUrl } from "../utils/variables";
 import { Card, Icon, ListItem } from "@rneui/themed";
 import { Video } from "expo-av";
-import { useUser } from "../hooks/ApiHooks";
+import { useFavourite, useUser } from "../hooks/ApiHooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
 const Single = ({route}) => {
   const {getUserById} = useUser();
+  const { getFavouritesByFileId, postFavourite } = useFavourite();
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [owner, setOwner] = useState({});
-  const {title, filename, description, media_type: type, screenshot, user_id:userId} = route.params;
+  const [likes, setLikes] = useState([]);
+  const {title, filename, description, media_type: type, screenshot, user_id:userId, file_id:fileId} = route.params;
+
+  const getFavourites = async() =>{
+    const favourites =  await getFavouritesByFileId(fileId);
+    setLikes(favourites);
+  };
+
+  const addFavourites = async() => {
+    try {
+      const userToken = await AsyncStorage.getItem('userToken');
+      await postFavourite(fileId, userToken);
+      getFavourites();
+
+    } catch (error) {
+      // note: cannot like same file multiple times
+
+    }
+
+  }
 
   const getOwnerInfo = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
     return setOwner(await getUserById(userId, userToken));
-  }
+  };
 
   useEffect(() => {
     getOwnerInfo();
+    getFavourites();
+    addFavourites();
   }, []);
 
   return (
@@ -55,6 +77,10 @@ const Single = ({route}) => {
       <ListItem>
         <Icon name="person" />
         <ListItem.Subtitle> {owner.username} ({owner.full_name})</ListItem.Subtitle>
+      </ListItem>
+      <ListItem>
+        <Icon name="favorite" onPress={addFavourites} />
+        <Text>favourite: {likes.length.toString()}</Text>
       </ListItem>
       </Card>
     </ScrollView>
