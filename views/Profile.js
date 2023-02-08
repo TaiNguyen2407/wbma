@@ -5,8 +5,10 @@ import {React, useContext, useEffect, useState} from "react";
 import { MainContext } from '../contexts/MainContext';
 import {useTag} from '../hooks/ApiHooks';
 import { uploadsUrl } from "../utils/variables";
+import PropTypes from 'prop-types';
 
-const Profile = () => {
+const Profile = ({navigation}) => {
+  // const navigation = useNavigation();
   const {getFilesByTag} = useTag();
   const {setIsLoggedIn, user, setUser} = useContext(MainContext);
   const [avatar, setAvatar] = useState('');
@@ -26,7 +28,6 @@ const Profile = () => {
   }, []);
 
   return (
-
     <Card>
       <Card.Title>{user.username}</Card.Title>
       <Card.Image source={{uri: uploadsUrl + avatar}}/>
@@ -48,11 +49,21 @@ const Profile = () => {
           } catch (error) {
             console.warn('Clearing asyncStorage failed', error);
           }
-      }} />
+      }} 
+      />
+      <Button 
+        title="My Files"
+        onPress={async() => {
+          navigation.navigate('MyFiles');
+        }}
+      />
     </Card>
   );
 };
 
 
+Profile.propTypes = {
+  navigation: PropTypes.object,
+}
 
 export default Profile;

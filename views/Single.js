@@ -33,7 +33,7 @@ const Single = ({route}) => {
       // note: cannot like same file multiple times
 
     }
-  }
+  } 
 
   const minusFavourites = async() => {
     try {
